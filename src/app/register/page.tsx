@@ -35,13 +35,8 @@ export default function RegisterPage() {
       });
 
       if (res.ok) {
-        // Automatically sign in the user after successful registration
-        await signIn('credentials', {
-          redirect: false,
-          email,
-          password,
-        });
-        router.push('/dashboard');
+        // Redirect to login page for manual sign in
+        router.push('/login?registered=true');
         router.refresh();
       } else {
         const data = await res.json();
