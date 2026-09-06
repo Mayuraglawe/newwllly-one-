@@ -58,15 +58,30 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
 
       <TaskBoard initialTasks={project.tasks} projectId={project.id} />
 
-      <div style={{ marginTop: '2rem', backgroundColor: 'white', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '1.5rem' }}>
-        <h3 className={styles.cardTitle}>Team Members</h3>
+      <div style={{
+        marginTop: '2rem',
+        background: 'rgba(17, 24, 39, 0.75)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid var(--border-color)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '1.5rem',
+      }}>
+        <h3 className={styles.cardTitle}>Team Members ({1 + project.members.length})</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
-          <li style={{ padding: '0.5rem 0', borderBottom: '1px solid #e2e8f0' }}>
-            <strong>{project.owner.name}</strong> ({project.owner.email}) - Owner
+          <li style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <strong style={{ color: 'var(--text-main)' }}>{project.owner.name || 'Owner'}</strong>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>({project.owner.email})</span>
+            </div>
+            <span className={`${styles.badge} ${styles.badgeActive}`}>👑 Project Owner</span>
           </li>
           {project.members.map(member => (
-            <li key={member.id} style={{ padding: '0.5rem 0', borderBottom: '1px solid #e2e8f0' }}>
-              <strong>{member.user.name}</strong> ({member.user.email}) - Member
+            <li key={member.id} style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <strong style={{ color: 'var(--text-main)' }}>{member.user.name || 'Member'}</strong>
+                <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginLeft: '0.5rem' }}>({member.user.email})</span>
+              </div>
+              <span className={`${styles.badge} ${styles.badgeSuccess}`}>👥 {member.role}</span>
             </li>
           ))}
         </ul>

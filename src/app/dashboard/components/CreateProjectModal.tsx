@@ -26,7 +26,7 @@ export default function CreateProjectModal() {
         setIsOpen(false);
         setName('');
         setDescription('');
-        router.refresh(); // Refresh the server component to show the new project
+        router.refresh();
       } else {
         console.error('Failed to create project');
       }
@@ -41,8 +41,7 @@ export default function CreateProjectModal() {
     return (
       <button 
         onClick={() => setIsOpen(true)} 
-        className="btn btn-primary" 
-        style={{ backgroundColor: 'var(--primary-color)' }}
+        className="btn btn-primary"
       >
         + Create Project
       </button>
@@ -52,40 +51,72 @@ export default function CreateProjectModal() {
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex',
-      alignItems: 'center', justifyContent: 'center', zIndex: 1000
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      backdropFilter: 'blur(8px)',
+      display: 'flex',
+      alignItems: 'center', justifyContent: 'center', zIndex: 1000,
+      padding: '1rem',
     }}>
       <div style={{
-        backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem',
-        width: '100%', maxWidth: '500px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
+        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
+        borderRadius: 'var(--radius-xl)',
+        padding: '2.25rem',
+        width: '100%', maxWidth: '500px',
+        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(99, 102, 241, 0.2)'
       }}>
-        <h2 style={{ marginBottom: '1rem', color: 'var(--text-main)' }}>Create New Project</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-main)' }}>Create New Project</h2>
+          <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
+        </div>
+
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Project Name</label>
+          <div style={{ marginBottom: '1.25rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)' }}>Project Name</label>
             <input 
               type="text" 
               required 
               value={name}
               onChange={(e) => setName(e.target.value)}
-              style={{ width: '100%', padding: '0.5rem', border: '1px solid #e2e8f0', borderRadius: '0.25rem' }}
+              style={{
+                width: '100%',
+                padding: '0.8rem 1rem',
+                background: 'rgba(11, 15, 25, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--text-main)',
+                fontSize: '0.95rem',
+              }}
               placeholder="e.g. Website Redesign"
             />
           </div>
-          <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem' }}>Description (Optional)</label>
+
+          <div style={{ marginBottom: '1.75rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-main)' }}>Description (Optional)</label>
             <textarea 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              style={{ width: '100%', padding: '0.5rem', border: '1px solid #e2e8f0', borderRadius: '0.25rem', minHeight: '80px' }}
-              placeholder="Brief details about the project..."
+              style={{
+                width: '100%',
+                padding: '0.8rem 1rem',
+                background: 'rgba(11, 15, 25, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                borderRadius: 'var(--radius-md)',
+                color: 'var(--text-main)',
+                fontSize: '0.95rem',
+                minHeight: '90px',
+                resize: 'vertical',
+              }}
+              placeholder="Brief details about the project objectives..."
             />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.85rem' }}>
             <button 
               type="button" 
               onClick={() => setIsOpen(false)}
-              style={{ padding: '0.5rem 1rem', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+              className="btn btn-secondary"
               disabled={isLoading}
             >
               Cancel
@@ -93,7 +124,6 @@ export default function CreateProjectModal() {
             <button 
               type="submit" 
               className="btn btn-primary"
-              style={{ backgroundColor: 'var(--primary-color)' }}
               disabled={isLoading}
             >
               {isLoading ? 'Creating...' : 'Create Project'}
@@ -104,3 +134,4 @@ export default function CreateProjectModal() {
     </div>
   );
 }
+

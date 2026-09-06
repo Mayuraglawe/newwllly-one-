@@ -13,7 +13,6 @@ export default async function DashboardPage() {
     redirect('/login');
   }
 
-  // Use type assertion since we added 'id' manually in route.ts
   const userId = (session.user as { id: string }).id;
 
   // 1. Fetch Projects for the user
@@ -45,42 +44,73 @@ export default async function DashboardPage() {
 
   const activeProjectsCount = projects.length;
   const pendingTasksCount = tasks.filter(t => t.status !== 'DONE').length;
+  const completedTasksCount = tasks.filter(t => t.status === 'DONE').length;
 
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Project Overview</h1>
-          <p className={styles.pageSubtitle}>Welcome back, {session.user.name || 'User'}. Here&apos;s what&apos;s happening today.</p>
+          <p className={styles.pageSubtitle}>Welcome back, <strong style={{ color: '#a5b4fc' }}>{session.user.name || 'User'}</strong>. Here&apos;s your team activity overview.</p>
         </div>
         <div className={styles.headerActions}>
           <CreateProjectModal />
         </div>
       </header>
 
+      {/* Stats Cards */}
       <div className={styles.statsGrid}>
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <h3 className={styles.statTitle}>Active Projects</h3>
-            <span className={styles.statIcon}>📊</span>
+            <div className={styles.statIcon}>📊</div>
           </div>
           <p className={styles.statValue}>{activeProjectsCount}</p>
+          <div className={styles.statTrend}>
+            <span className={styles.trendUp}>↑ Active</span> across workspace
+          </div>
         </div>
-        
+
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
-            <h3 className={styles.statTitle}>My Pending Tasks</h3>
-            <span className={styles.statIcon}>✅</span>
+            <h3 className={styles.statTitle}>Pending Tasks</h3>
+            <div className={styles.statIcon} style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fde047' }}>⏳</div>
           </div>
           <p className={styles.statValue}>{pendingTasksCount}</p>
+          <div className={styles.statTrend}>
+            Requires your attention
+          </div>
+        </div>
+
+        <div className={styles.statCard}>
+          <div className={styles.statHeader}>
+            <h3 className={styles.statTitle}>Completed Tasks</h3>
+            <div className={styles.statIcon} style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#6ee7b7' }}>✅</div>
+          </div>
+          <p className={styles.statValue}>{completedTasksCount}</p>
+          <div className={styles.statTrend}>
+            <span className={styles.trendUp}>Great job!</span> Finished
+          </div>
         </div>
       </div>
 
       <div className={styles.mainGrid}>
+        {/* Projects Card */}
         <div className={styles.projectsCard}>
-          <h3 className={styles.cardTitle}>Your Projects</h3>
+          <div className={styles.cardTitle}>
+            <span>Recent Projects</span>
+            <Link href="/dashboard/projects" style={{ fontSize: '0.85rem', color: '#a5b4fc', textDecoration: 'none' }}>
+              View all →
+            </Link>
+          </div>
+
           {projects.length === 0 ? (
-            <p style={{ color: 'var(--text-muted)' }}>You don&apos;t have any projects yet.</p>
+            <div className={styles.emptyState}>
+              <p style={{ color: 'var(--text-muted)' }}>You don&apos;t have any projects yet.</p>
+              <div style={{ marginTop: '1rem' }}>
+                <CreateProjectModal />
+              </div>
+            </div>
           ) : (
             <table className={styles.table}>
               <thead>
@@ -88,6 +118,7 @@ export default async function DashboardPage() {
                   <th>Project Name</th>
                   <th>Members</th>
                   <th>Completion</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,16 +126,33 @@ export default async function DashboardPage() {
                   const totalTasks = project._count.tasks;
                   const completedTasks = project.tasks.length;
                   const completionPercentage = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
-                  
+
                   return (
                     <tr key={project.id}>
                       <td>
-                        <Link href={`/dashboard/projects/${project.id}`} style={{ color: 'var(--primary-color)', fontWeight: 600, textDecoration: 'none' }}>
+                        <Link href={`/dashboard/projects/${project.id}`} style={{ color: 'var(--text-main)', fontWeight: 600, textDecoration: 'none' }}>
                           {project.name}
                         </Link>
                       </td>
-                      <td>{project._count.members}</td>
-                      <td>{completionPercentage}%</td>
+                      <td>
+                        <span className={styles.badge} style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)' }}>
+                          👥 {project._count.members}
+                        </span>
+                      </td>
+                      <td style={{ minWidth: '140px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.2rem' }}>
+                          <span>{completionPercentage}%</span>
+                          <span>{completedTasks}/{totalTasks}</span>
+                        </div>
+                        <div className={styles.progressBarTrack}>
+                          <div className={styles.progressBarFill} style={{ width: `${completionPercentage}%` }} />
+                        </div>
+                      </td>
+                      <td>
+                        <Link href={`/dashboard/projects/${project.id}`} className="btn btn-secondary" style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}>
+                          Open
+                        </Link>
+                      </td>
                     </tr>
                   );
                 })}
@@ -113,20 +161,36 @@ export default async function DashboardPage() {
           )}
         </div>
 
+        {/* Activity Card */}
         <div className={styles.recentActivityCard}>
-          <h3 className={styles.cardTitle}>My Recent Tasks</h3>
+          <div className={styles.cardTitle}>
+            <span>My Tasks</span>
+            <Link href="/dashboard/tasks" style={{ fontSize: '0.85rem', color: '#a5b4fc', textDecoration: 'none' }}>
+              View all →
+            </Link>
+          </div>
+
           <div className={styles.activityList}>
             {tasks.length === 0 ? (
-              <p style={{ color: 'var(--text-muted)' }}>No recent tasks assigned to you.</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No recent tasks assigned to you.</p>
             ) : (
               tasks.map(task => (
                 <div key={task.id} className={styles.activityItem}>
-                  <div className={styles.activityAvatar}>
+                  <div className={styles.activityAvatar} style={{
+                    background: task.status === 'DONE' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
+                    color: task.status === 'DONE' ? '#6ee7b7' : '#a5b4fc'
+                  }}>
                     {task.status === 'DONE' ? '✓' : '•'}
                   </div>
                   <div className={styles.activityContent}>
                     <p className={styles.activityText}><strong>{task.title}</strong></p>
-                    <p className={styles.activityTime}>Status: {task.status}</p>
+                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                      <span className={`${styles.badge} ${
+                        task.status === 'DONE' ? styles.badgeSuccess : task.status === 'IN_PROGRESS' ? styles.badgeWarning : styles.badgeActive
+                      }`}>
+                        {task.status.replace('_', ' ')}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))
@@ -137,3 +201,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
+

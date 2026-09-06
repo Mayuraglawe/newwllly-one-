@@ -32,12 +32,9 @@ export default function DeleteProjectButton({ projectId, isOwner }: { projectId:
     <button 
       onClick={handleDelete}
       disabled={isDeleting}
-      style={{
-        background: 'none', border: '1px solid #ef4444', color: '#ef4444', 
-        padding: '0.5rem 1rem', borderRadius: '0.25rem', cursor: 'pointer', fontSize: '0.875rem'
-      }}
+      className="btn btn-danger"
     >
-      {isDeleting ? 'Deleting...' : 'Delete Project'}
+      🗑️ {isDeleting ? 'Deleting...' : 'Delete Project'}
     </button>
   );
 }

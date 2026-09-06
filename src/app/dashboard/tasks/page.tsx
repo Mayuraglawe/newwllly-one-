@@ -1,6 +1,7 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import styles from '../dashboard.module.css';
 
@@ -19,50 +20,95 @@ export default async function TasksPage() {
     orderBy: { createdAt: 'desc' },
   });
 
-  const statusColors: Record<string, { bg: string; color: string }> = {
-    TODO:        { bg: '#f3f4f6', color: '#374151' },
-    IN_PROGRESS: { bg: '#dbeafe', color: '#1e40af' },
-    DONE:        { bg: '#d1fae5', color: '#065f46' },
-  };
-
   return (
-    <div>
-      <div style={{ marginBottom: '2rem' }}>
-        <h3 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>My Tasks</h3>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>All tasks assigned to you across projects</p>
-      </div>
+    <div className={styles.dashboardContainer}>
+      <header className={styles.pageHeader}>
+        <div>
+          <h1 className={styles.pageTitle}>My Tasks</h1>
+          <p className={styles.pageSubtitle}>All action items assigned to you across projects ({tasks.length})</p>
+        </div>
+      </header>
 
       {tasks.length === 0 ? (
         <div className={styles.emptyState}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
-          <p style={{ color: 'var(--text-muted)' }}>No tasks assigned to you yet.</p>
+          <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>🎉</div>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>All Caught Up!</h3>
+          <p style={{ color: 'var(--text-muted)' }}>You have no pending tasks assigned to you right now.</p>
         </div>
       ) : (
         <div style={{ display: 'grid', gap: '1rem' }}>
           {tasks.map((task) => {
-            const sc = statusColors[task.status] || statusColors.TODO;
+            const isDone = task.status === 'DONE';
+            const inProgress = task.status === 'IN_PROGRESS';
+
             return (
-              <div key={task.id} className={styles.projectCard} style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div
+                key={task.id}
+                style={{
+                  background: 'rgba(17, 24, 39, 0.75)',
+                  backdropFilter: 'blur(12px)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: '1.25rem 1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '1rem',
+                  boxShadow: 'var(--shadow-sm)',
+                  transition: 'all 200ms ease',
+                }}
+              >
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>{task.title}</div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
+                    <span style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      background: isDone ? 'rgba(16, 185, 129, 0.2)' : inProgress ? 'rgba(245, 158, 11, 0.2)' : 'rgba(99, 102, 241, 0.2)',
+                      color: isDone ? '#6ee7b7' : inProgress ? '#fde047' : '#a5b4fc',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                    }}>
+                      {isDone ? '✓' : '•'}
+                    </span>
+
+                    <h3 style={{
+                      fontSize: '1.05rem',
+                      fontWeight: 600,
+                      color: 'var(--text-main)',
+                      textDecoration: isDone ? 'line-through' : 'none',
+                      opacity: isDone ? 0.7 : 1,
+                    }}>
+                      {task.title}
+                    </h3>
+                  </div>
+
                   {task.description && (
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '0.25rem' }}>{task.description}</div>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '0.5rem', paddingLeft: '2rem' }}>
+                      {task.description}
+                    </p>
                   )}
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    Project: <span style={{ color: 'var(--primary-color)', fontWeight: 500 }}>{task.project.name}</span>
+
+                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', fontSize: '0.825rem', color: 'var(--text-muted)', paddingLeft: '2rem' }}>
+                    <span>
+                      Project: <Link href={`/dashboard/projects/${task.project.id}`} style={{ color: '#a5b4fc', fontWeight: 600, textDecoration: 'none' }}>{task.project.name}</Link>
+                    </span>
                     {task.dueDate && (
-                      <span style={{ marginLeft: '1rem' }}>
-                        Due: {new Date(task.dueDate).toLocaleDateString()}
-                      </span>
+                      <span>📅 Due: {new Date(task.dueDate).toLocaleDateString()}</span>
                     )}
                   </div>
                 </div>
-                <span style={{
-                  padding: '0.25rem 0.75rem', borderRadius: '999px', fontSize: '0.8rem',
-                  background: sc.bg, color: sc.color, fontWeight: 600, whiteSpace: 'nowrap',
-                }}>
-                  {task.status.replace('_', ' ')}
-                </span>
+
+                <div>
+                  <span className={`${styles.badge} ${
+                    isDone ? styles.badgeSuccess : inProgress ? styles.badgeWarning : styles.badgeActive
+                  }`}>
+                    {task.status.replace('_', ' ')}
+                  </span>
+                </div>
               </div>
             );
           })}
@@ -71,3 +117,4 @@ export default async function TasksPage() {
     </div>
   );
 }
+
