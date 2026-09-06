@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NOVA - Full Stack Project Management Platform
 
-## Getting Started
+NOVA is a robust, modern Full-Stack Project Management and Team Collaboration platform built as an intern assignment submission. It allows users to securely register, create isolated project workspaces, manage tasks on an interactive Kanban board, and collaborate with invited team members in real-time.
 
-First, run the development server:
+## 🚀 Tech Stack
 
+- **Framework**: [Next.js 16 (App Router)](https://nextjs.org/)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS / CSS Modules (Custom High-End UI)
+- **Database**: PostgreSQL (via Supabase)
+- **ORM**: [Prisma v7](https://www.prisma.io/) (utilizing modern `@prisma/adapter-pg` driver adapters)
+- **Authentication**: [NextAuth.js](https://next-auth.js.org/) (Credentials Provider with bcrypt password hashing)
+- **Testing**: [Playwright](https://playwright.dev/) (End-to-End browser testing)
+
+## ✨ Core Features
+
+### 1. Secure Authentication & Authorization
+- **Custom Credentials Login**: Users can register and log in securely. Passwords are cryptographically hashed using `bcryptjs`.
+- **Session Management**: Persistent, secure server-side session handling via NextAuth.
+- **Forgot/Reset Password Flow**: Users can request a password reset which securely generates a time-sensitive, unique token stored in the database.
+- **Protected Routes**: Middleware and server-side checks ensure unauthenticated users cannot access the dashboard or API routes.
+
+### 2. Project Management (CRUD)
+- **Dashboard Overview**: A personalized dashboard that fetches and aggregates the user's active projects and pending tasks.
+- **Create & Delete Projects**: Users can instantly spin up new projects through a responsive modal. Project owners have the exclusive right to permanently delete their projects.
+
+### 3. Interactive Task Board (Kanban)
+- **Task Creation**: Add tasks directly into a project's workspace.
+- **Dynamic Status Updates**: An interactive board featuring **To Do**, **In Progress**, and **Done** columns. Moving tasks immediately updates the database.
+- **Task Deletion**: Easily remove tasks from the board.
+
+### 4. Team Collaboration
+- **Member Invites**: Project owners can invite other registered users to their workspace via email address.
+- **Access Control**: Only the Project Owner and invited Members can view the project details or interact with the task board.
+
+## 🛠️ Local Development Setup
+
+To run this project locally, follow these steps:
+
+### Prerequisites
+- Node.js (v18 or higher)
+- A PostgreSQL database URL (e.g., from Supabase or Neon)
+
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Create a `.env` file in the root directory and add the following keys:
+```env
+# Your PostgreSQL connection string
+DATABASE_URL="postgresql://user:password@host:port/dbname"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# Generate a random secret for NextAuth (e.g., run `openssl rand -base64 32`)
+NEXTAUTH_SECRET="your-super-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Database Setup
+Push the Prisma schema to your database to create the necessary tables:
+```bash
+npx prisma db push
+npx prisma generate
+```
 
-## Learn More
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-To learn more about Next.js, take a look at the following resources:
+## 🧪 Testing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The platform includes a robust End-to-End testing suite built with Playwright.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To run the automated test suite:
+```bash
+# Install required browser binaries
+npx playwright install chromium --with-deps
 
-## Deploy on Vercel
+# Run the tests headlessly
+npx playwright test
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Or run with the UI to watch the tests execute
+npx playwright test --ui
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏗️ Build for Production
+To verify the application compiles perfectly for deployment:
+```bash
+npm run build
+```
