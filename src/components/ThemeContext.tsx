@@ -15,24 +15,21 @@ const ThemeContext = createContext<ThemeContextType>({
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('nova-theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+    }
+    return 'dark';
+  });
 
   useEffect(() => {
-    // Read saved theme from localStorage or system preference
-    const savedTheme = localStorage.getItem('nova-theme') as Theme | null;
-    if (savedTheme === 'light' || savedTheme === 'dark') {
-      setTheme(savedTheme);
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    } else {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    }
-  }, []);
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('nova-theme', theme);
+  }, [theme]);
 
   const toggleTheme = () => {
-    const nextTheme: Theme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(nextTheme);
-    localStorage.setItem('nova-theme', nextTheme);
-    document.documentElement.setAttribute('data-theme', nextTheme);
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
   return (
