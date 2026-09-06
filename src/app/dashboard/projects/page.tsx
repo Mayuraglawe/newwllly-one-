@@ -68,7 +68,7 @@ export default async function ProjectsListPage() {
               <div
                 key={project.id}
                 style={{
-                  background: 'rgba(17, 24, 39, 0.75)',
+                  background: 'var(--surface-glass)',
                   backdropFilter: 'blur(12px)',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-lg)',

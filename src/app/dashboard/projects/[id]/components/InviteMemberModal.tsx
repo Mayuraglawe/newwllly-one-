@@ -52,20 +52,20 @@ export default function InviteMemberModal({ projectId, isOwner }: { projectId: s
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center', justifyContent: 'center', zIndex: 1000,
       padding: '1rem',
     }}>
       <div style={{
-        backgroundColor: 'rgba(17, 24, 39, 0.95)',
+        backgroundColor: 'var(--surface-card)',
         backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
+        border: '1px solid var(--border-color)',
         borderRadius: 'var(--radius-xl)',
         padding: '2rem',
         width: '100%', maxWidth: '440px',
-        boxShadow: '0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(99,102,241,0.2)'
+        boxShadow: 'var(--shadow-lg)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>Invite Collaborator</h2>
@@ -89,8 +89,8 @@ export default function InviteMemberModal({ projectId, isOwner }: { projectId: s
               style={{
                 width: '100%',
                 padding: '0.75rem 1rem',
-                background: 'rgba(11, 15, 25, 0.8)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
+                background: 'var(--surface-hover)',
+                border: '1px solid var(--border-color)',
                 borderRadius: 'var(--radius-md)',
                 color: 'var(--text-main)',
                 fontSize: '0.95rem',

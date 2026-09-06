@@ -1,18 +1,8 @@
 .dashboardTheme {
-  --bg-color: #0b0f19;
-  --surface-color: #111827;
-  --surface-card: #1f2937;
-  --surface-hover: #374151;
-  --text-main: #f9fafb;
-  --text-muted: #9ca3af;
-  --border-color: rgba(255, 255, 255, 0.08);
-  
-  --primary-color: #6366f1;
-  --primary-hover: #4f46e5;
-  
   background-color: var(--bg-color);
   color: var(--text-main);
   min-height: 100vh;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
 .dashboardLayout {
@@ -23,7 +13,7 @@
 
 .sidebar {
   width: 270px;
-  background: rgba(17, 24, 39, 0.95);
+  background: var(--surface-glass);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-right: 1px solid var(--border-color);
@@ -203,7 +193,7 @@
 }
 
 .statCard {
-  background: rgba(17, 24, 39, 0.7);
+  background: var(--surface-glass);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
@@ -214,7 +204,7 @@
 }
 
 .statCard:hover {
-  border-color: rgba(99, 102, 241, 0.3);
+  border-color: var(--border-highlight);
   transform: translateY(-2px);
   box-shadow: var(--shadow-glow);
 }
@@ -277,7 +267,7 @@
 }
 
 .recentActivityCard, .projectsCard {
-  background: rgba(17, 24, 39, 0.7);
+  background: var(--surface-glass);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);

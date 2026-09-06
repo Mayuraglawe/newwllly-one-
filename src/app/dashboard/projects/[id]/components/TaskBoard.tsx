@@ -70,7 +70,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
     <div
       key={task.id}
       style={{
-        background: 'rgba(31, 41, 55, 0.8)',
+        background: 'var(--surface-card)',
         border: '1px solid var(--border-color)',
         borderRadius: 'var(--radius-md)',
         padding: '1rem',
@@ -115,8 +115,8 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
               fontSize: '0.75rem',
               padding: '0.25rem 0.6rem',
               borderRadius: '0.25rem',
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid var(--border-color)',
+              background: 'var(--surface-hover)',
               color: 'var(--text-muted)',
               cursor: 'pointer',
               fontWeight: 600,
@@ -134,7 +134,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
               borderRadius: '0.25rem',
               border: '1px solid rgba(245, 158, 11, 0.3)',
               background: 'rgba(245, 158, 11, 0.15)',
-              color: '#fde047',
+              color: '#f59e0b',
               cursor: 'pointer',
               fontWeight: 600,
             }}
@@ -151,7 +151,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
               borderRadius: '0.25rem',
               border: '1px solid rgba(16, 185, 129, 0.3)',
               background: 'rgba(16, 185, 129, 0.15)',
-              color: '#6ee7b7',
+              color: '#10b981',
               cursor: 'pointer',
               fontWeight: 600,
             }}
@@ -178,7 +178,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
               style={{
                 flex: 1,
                 padding: '0.65rem 1rem',
-                background: 'rgba(17, 24, 39, 0.9)',
+                background: 'var(--surface-card)',
                 border: '1px solid var(--border-highlight)',
                 borderRadius: 'var(--radius-md)',
                 color: 'var(--text-main)',
@@ -202,7 +202,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         {/* To Do Column */}
         <div style={{
-          background: 'rgba(17, 24, 39, 0.75)',
+          background: 'var(--surface-glass)',
           backdropFilter: 'blur(12px)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
@@ -210,7 +210,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '2px solid #6366f1' }}>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}>📋 To Do</h3>
-            <span style={{ fontSize: '0.8rem', background: 'rgba(99, 102, 241, 0.2)', color: '#a5b4fc', padding: '0.2rem 0.6rem', borderRadius: '99px', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.8rem', background: 'rgba(99, 102, 241, 0.15)', color: 'var(--primary-color)', padding: '0.2rem 0.6rem', borderRadius: '99px', fontWeight: 700 }}>
               {tasks.filter(t => t.status === 'TODO').length}
             </span>
           </div>
@@ -219,7 +219,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
 
         {/* In Progress Column */}
         <div style={{
-          background: 'rgba(17, 24, 39, 0.75)',
+          background: 'var(--surface-glass)',
           backdropFilter: 'blur(12px)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
@@ -227,7 +227,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '2px solid #f59e0b' }}>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}>⏳ In Progress</h3>
-            <span style={{ fontSize: '0.8rem', background: 'rgba(245, 158, 11, 0.2)', color: '#fde047', padding: '0.2rem 0.6rem', borderRadius: '99px', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.8rem', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', padding: '0.2rem 0.6rem', borderRadius: '99px', fontWeight: 700 }}>
               {tasks.filter(t => t.status === 'IN_PROGRESS').length}
             </span>
           </div>
@@ -236,7 +236,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
 
         {/* Done Column */}
         <div style={{
-          background: 'rgba(17, 24, 39, 0.75)',
+          background: 'var(--surface-glass)',
           backdropFilter: 'blur(12px)',
           border: '1px solid var(--border-color)',
           borderRadius: 'var(--radius-lg)',
@@ -244,7 +244,7 @@ export default function TaskBoard({ initialTasks, projectId }: { initialTasks: T
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '2px solid #10b981' }}>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)' }}>✅ Done</h3>
-            <span style={{ fontSize: '0.8rem', background: 'rgba(16, 185, 129, 0.2)', color: '#6ee7b7', padding: '0.2rem 0.6rem', borderRadius: '99px', fontWeight: 700 }}>
+            <span style={{ fontSize: '0.8rem', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', padding: '0.2rem 0.6rem', borderRadius: '99px', fontWeight: 700 }}>
               {tasks.filter(t => t.status === 'DONE').length}
             </span>
           </div>

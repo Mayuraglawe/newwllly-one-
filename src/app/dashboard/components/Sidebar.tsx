@@ -3,11 +3,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
+import { useTheme } from '@/components/ThemeContext';
 import styles from '../dashboard.module.css';
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { label: 'Dashboard', href: '/dashboard', icon: '📊' },
@@ -36,7 +38,7 @@ export default function Sidebar() {
             fontSize: '1rem',
             boxShadow: '0 4px 12px rgba(99,102,241,0.4)'
           }}>⚡</span>
-          <span>NOVA</span>
+          <span style={{ color: 'var(--text-main)' }}>NOVA</span>
         </div>
 
         <nav className={styles.sidebarNav}>
@@ -57,6 +59,30 @@ export default function Sidebar() {
       </div>
 
       <div className={styles.sidebarFooter}>
+        {/* Theme Toggle Button */}
+        <button
+          onClick={toggleTheme}
+          className="btn btn-secondary"
+          style={{
+            width: '100%',
+            justifyContent: 'space-between',
+            padding: '0.6rem 0.85rem',
+            fontSize: '0.85rem',
+            borderRadius: 'var(--radius-md)',
+          }}
+          title="Toggle Light / Dark Mode"
+        >
+          <span>{theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode'}</span>
+          <span style={{
+            fontSize: '0.75rem',
+            padding: '0.15rem 0.5rem',
+            borderRadius: '99px',
+            background: 'rgba(99,102,241,0.15)',
+            color: 'var(--primary-color)',
+            fontWeight: 700
+          }}>Switch</span>
+        </button>
+
         <div className={styles.userInfo}>
           <div className={styles.userAvatar}>{initial}</div>
           <div className={styles.userDetails}>
