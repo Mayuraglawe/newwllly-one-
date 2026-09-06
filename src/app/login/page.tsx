@@ -34,6 +34,7 @@ export default function LoginPage() {
         router.refresh();
       }
     } catch (err) {
+      console.error(err);
       setError('An error occurred during sign in');
     } finally {
       setLoading(false);
