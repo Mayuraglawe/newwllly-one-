@@ -4,7 +4,56 @@ import Link from 'next/link';
 import styles from '../auth.module.css';
 import dashboardStyles from '../dashboard/dashboard.module.css'; // Reuse dashboard theme
 
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 export default function RegisterPage() {
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      if (res.ok) {
+        // Automatically sign in the user after successful registration
+        await signIn('credentials', {
+          redirect: false,
+          email,
+          password,
+        });
+        router.push('/dashboard');
+        router.refresh();
+      } else {
+        const data = await res.json();
+        setError(data.message || 'Registration failed');
+      }
+    } catch (err) {
+      setError('An error occurred during registration');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className={dashboardStyles.dashboardTheme}>
       <div className={styles.authContainer}>
@@ -12,12 +61,16 @@ export default function RegisterPage() {
           <h1 className={styles.authLogo}>NOVA</h1>
           <p className={styles.authSubtitle}>Create your account</p>
           
-          <form onSubmit={(e) => e.preventDefault()}>
+          {error && <div style={{ color: 'red', marginBottom: '1rem', fontSize: '0.9rem', textAlign: 'center' }}>{error}</div>}
+
+          <form onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
               <label htmlFor="name" className={styles.label}>Full Name</label>
               <input 
                 type="text" 
                 id="name" 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className={styles.input} 
                 placeholder="John Doe" 
                 required 
@@ -29,6 +82,8 @@ export default function RegisterPage() {
               <input 
                 type="email" 
                 id="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className={styles.input} 
                 placeholder="name@company.com" 
                 required 
@@ -40,14 +95,16 @@ export default function RegisterPage() {
               <input 
                 type="password" 
                 id="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className={styles.input} 
                 placeholder="••••••••" 
                 required 
               />
             </div>
             
-            <button type="submit" className={styles.authButton}>
-              Create Account
+            <button type="submit" className={styles.authButton} disabled={loading}>
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
           
