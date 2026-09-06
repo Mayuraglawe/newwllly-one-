@@ -32,7 +32,7 @@
   font-weight: 800;
   margin-bottom: 2.5rem;
   padding: 0 0.75rem;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
+  background: var(--logo-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -62,9 +62,9 @@
 }
 
 .navItem:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-hover);
   color: var(--text-main);
-  border-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-color);
 }
 
 .navItem.active {
@@ -298,14 +298,13 @@
   align-items: flex-start;
   padding: 0.85rem;
   border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--surface-hover);
+  border: 1px solid var(--border-color);
   transition: all var(--transition-fast);
 }
 
 .activityItem:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--border-highlight);
 }
 
 .activityAvatar {

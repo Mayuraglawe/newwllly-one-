@@ -51,7 +51,7 @@
   letter-spacing: -0.04em;
   line-height: 1.1;
   margin-bottom: 1.25rem;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #818cf8 100%);
+  background: var(--hero-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -80,7 +80,7 @@
 }
 
 .featureCard {
-  background: rgba(17, 24, 39, 0.7);
+  background: var(--surface-card);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   padding: 2.25rem;
