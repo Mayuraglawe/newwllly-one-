@@ -23,8 +23,8 @@
 
 .authCard {
   background: rgba(17, 24, 39, 0.85);
-  backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
   padding: 2.75rem 2.5rem;
@@ -42,6 +42,7 @@
   margin-bottom: 0.25rem;
   background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 0.05em;
 }

@@ -5,7 +5,6 @@ import styles from '../auth.module.css';
 import dashboardStyles from '../dashboard/dashboard.module.css'; // Reuse dashboard theme
 
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function RegisterPage() {
