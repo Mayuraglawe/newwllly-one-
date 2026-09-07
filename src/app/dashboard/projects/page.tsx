@@ -14,9 +14,12 @@ export default async function ProjectsListPage() {
   }
 
   const userId = (session.user as { id: string }).id;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session.user as any).role || 'MEMBER';
+  const isAdmin = userRole === 'ADMIN';
 
   const projects = await prisma.project.findMany({
-    where: {
+    where: isAdmin ? {} : {
       OR: [
         { ownerId: userId },
         { members: { some: { userId: userId } } },

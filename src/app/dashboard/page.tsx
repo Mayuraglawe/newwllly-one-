@@ -14,10 +14,13 @@ export default async function DashboardPage() {
   }
 
   const userId = (session.user as { id: string }).id;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session.user as any).role || 'MEMBER';
+  const isAdmin = userRole === 'ADMIN';
 
-  // 1. Fetch Projects for the user
+  // 1. Fetch Projects (All for ADMINs, user-specific for MEMBERs)
   const projects = await prisma.project.findMany({
-    where: {
+    where: isAdmin ? {} : {
       OR: [
         { ownerId: userId },
         { members: { some: { userId: userId } } },
@@ -35,9 +38,9 @@ export default async function DashboardPage() {
     take: 5,
   });
 
-  // 2. Fetch Tasks assigned to user
+  // 2. Fetch Tasks (All for ADMIN oversight, assigned for MEMBERs)
   const tasks = await prisma.task.findMany({
-    where: { assigneeId: userId },
+    where: isAdmin ? {} : { assigneeId: userId },
     orderBy: { createdAt: 'desc' },
     take: 5,
   });
@@ -51,7 +54,21 @@ export default async function DashboardPage() {
       <header className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Project Overview</h1>
-          <p className={styles.pageSubtitle}>Welcome back, <strong style={{ color: 'var(--primary-color)' }}>{session.user.name || 'User'}</strong>. Here&apos;s your team activity overview.</p>
+          <p className={styles.pageSubtitle}>
+            Welcome back, <strong style={{ color: 'var(--primary-color)' }}>{session.user.name || 'User'}</strong>
+            <span style={{
+              fontSize: '0.75rem',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '99px',
+              background: isAdmin ? 'rgba(217, 119, 6, 0.15)' : 'rgba(2, 132, 199, 0.15)',
+              color: isAdmin ? 'var(--accent-amber)' : 'var(--primary-color)',
+              fontWeight: 700,
+              marginLeft: '0.5rem',
+              textTransform: 'uppercase'
+            }}>
+              {isAdmin ? '👑 Admin' : '👥 Team Member'}
+            </span>
+          </p>
         </div>
         <div className={styles.headerActions}>
           <CreateProjectModal />

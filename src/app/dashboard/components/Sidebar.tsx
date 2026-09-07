@@ -6,6 +6,8 @@ import { signOut, useSession } from 'next-auth/react';
 import { useTheme } from '@/components/ThemeContext';
 import styles from '../dashboard.module.css';
 
+import PlatformInviteModal from './PlatformInviteModal';
+
 export default function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
@@ -20,6 +22,9 @@ export default function Sidebar() {
 
   const userName = session?.user?.name || 'User';
   const userEmail = session?.user?.email || '';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session?.user as any)?.role || 'MEMBER';
+  const isAdmin = userRole === 'ADMIN';
   const initial = (userName || 'U')[0].toUpperCase();
 
   return (
@@ -59,6 +64,13 @@ export default function Sidebar() {
       </div>
 
       <div className={styles.sidebarFooter}>
+        {/* Admin Invite Teammate Shortcut */}
+        {isAdmin && (
+          <div style={{ marginBottom: '0.25rem' }}>
+            <PlatformInviteModal />
+          </div>
+        )}
+
         {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
@@ -86,7 +98,20 @@ export default function Sidebar() {
         <div className={styles.userInfo}>
           <div className={styles.userAvatar}>{initial}</div>
           <div className={styles.userDetails}>
-            <div className={styles.userName}>{userName}</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+              <div className={styles.userName}>{userName}</div>
+              <span style={{
+                fontSize: '0.65rem',
+                padding: '0.1rem 0.4rem',
+                borderRadius: '99px',
+                background: isAdmin ? 'rgba(217, 119, 6, 0.15)' : 'rgba(2, 132, 199, 0.15)',
+                color: isAdmin ? 'var(--accent-amber)' : 'var(--primary-color)',
+                fontWeight: 700,
+                textTransform: 'uppercase'
+              }}>
+                {isAdmin ? 'Admin' : 'Member'}
+              </span>
+            </div>
             <div className={styles.userEmail}>{userEmail}</div>
           </div>
         </div>

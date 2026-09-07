@@ -35,11 +35,15 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
     return <div style={{ padding: '2rem' }}>Project not found</div>;
   }
 
-  // Ensure user is member or owner
-  const isOwner = project.ownerId === userId;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session.user as any).role || 'MEMBER';
+  const isAdmin = userRole === 'ADMIN';
+
+  // Ensure user is member, owner, or platform admin
+  const isOwner = project.ownerId === userId || isAdmin;
   const isMember = project.members.some(m => m.userId === userId);
   
-  if (!isOwner && !isMember) {
+  if (!isOwner && !isMember && !isAdmin) {
     return <div style={{ padding: '2rem' }}>Unauthorized</div>;
   }
 

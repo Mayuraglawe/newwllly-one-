@@ -33,10 +33,12 @@ export const authOptions: AuthOptions = {
           return null;
         }
 
+        const dbUser = user as unknown as { id: string; email: string; name: string | null; role?: string };
         return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
+          id: dbUser.id,
+          email: dbUser.email,
+          name: dbUser.name,
+          role: dbUser.role || "MEMBER",
         };
       }
     })
@@ -47,14 +49,16 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (session.user as any).id = token.id;
+        const u = session.user as unknown as { id?: string; role?: string };
+        u.id = token.id as string;
+        u.role = (token.role as string) || "MEMBER";
       }
       return session;
     },
     async jwt({ token, user }: { token: JWT; user: User | undefined }) {
       if (user) {
         token.id = user.id;
+        token.role = (user as unknown as { role?: string }).role || "MEMBER";
       }
       return token;
     }

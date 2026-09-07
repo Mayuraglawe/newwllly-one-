@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, password, role } = await request.json();
 
     if (!email || !password || !name) {
       return NextResponse.json({ message: 'Missing fields' }, { status: 400 });
@@ -18,23 +18,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: 'User already exists' }, { status: 409 });
     }
 
+    // Determine role: if first user on platform, default to ADMIN, otherwise requested role or MEMBER
+    const userCount = await prisma.user.count();
+    const assignedRole = userCount === 0 ? 'ADMIN' : (role === 'ADMIN' ? 'ADMIN' : 'MEMBER');
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const newUserPayload = {
+      name,
+      email,
+      passwordHash: hashedPassword,
+      role: assignedRole,
+    };
+
     const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash: hashedPassword,
-      },
+      data: newUserPayload as unknown as Parameters<typeof prisma.user.create>[0]['data'],
     });
+
+    const userObj = user as unknown as { id: string; name: string | null; email: string; role?: string };
 
     // Return the user without the password hash
     return NextResponse.json({
       message: 'User created successfully',
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
+        id: userObj.id,
+        name: userObj.name,
+        email: userObj.email,
+        role: userObj.role || assignedRole,
       }
     }, { status: 201 });
 
