@@ -51,7 +51,7 @@ export default async function DashboardPage() {
       <header className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>Project Overview</h1>
-          <p className={styles.pageSubtitle}>Welcome back, <strong style={{ color: '#a5b4fc' }}>{session.user.name || 'User'}</strong>. Here&apos;s your team activity overview.</p>
+          <p className={styles.pageSubtitle}>Welcome back, <strong style={{ color: 'var(--primary-color)' }}>{session.user.name || 'User'}</strong>. Here&apos;s your team activity overview.</p>
         </div>
         <div className={styles.headerActions}>
           <CreateProjectModal />
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <h3 className={styles.statTitle}>Pending Tasks</h3>
-            <div className={styles.statIcon} style={{ background: 'rgba(245, 158, 11, 0.15)', color: '#fde047' }}>⏳</div>
+            <div className={styles.statIcon} style={{ background: 'rgba(217, 119, 6, 0.15)', color: 'var(--accent-amber)' }}>⏳</div>
           </div>
           <p className={styles.statValue}>{pendingTasksCount}</p>
           <div className={styles.statTrend}>
@@ -85,7 +85,7 @@ export default async function DashboardPage() {
         <div className={styles.statCard}>
           <div className={styles.statHeader}>
             <h3 className={styles.statTitle}>Completed Tasks</h3>
-            <div className={styles.statIcon} style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#6ee7b7' }}>✅</div>
+            <div className={styles.statIcon} style={{ background: 'rgba(5, 150, 105, 0.15)', color: 'var(--accent-emerald)' }}>✅</div>
           </div>
           <p className={styles.statValue}>{completedTasksCount}</p>
           <div className={styles.statTrend}>
@@ -99,7 +99,7 @@ export default async function DashboardPage() {
         <div className={styles.projectsCard}>
           <div className={styles.cardTitle}>
             <span>Recent Projects</span>
-            <Link href="/dashboard/projects" style={{ fontSize: '0.85rem', color: '#a5b4fc', textDecoration: 'none' }}>
+            <Link href="/dashboard/projects" style={{ fontSize: '0.85rem', color: 'var(--primary-color)', textDecoration: 'none' }}>
               View all →
             </Link>
           </div>
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
                         </Link>
                       </td>
                       <td>
-                        <span className={styles.badge} style={{ background: 'rgba(255,255,255,0.06)', color: 'var(--text-muted)' }}>
+                        <span className={styles.badge} style={{ background: 'var(--surface-hover)', color: 'var(--text-muted)', border: '1px solid var(--border-color)' }}>
                           👥 {project._count.members}
                         </span>
                       </td>
@@ -165,7 +165,7 @@ export default async function DashboardPage() {
         <div className={styles.recentActivityCard}>
           <div className={styles.cardTitle}>
             <span>My Tasks</span>
-            <Link href="/dashboard/tasks" style={{ fontSize: '0.85rem', color: '#a5b4fc', textDecoration: 'none' }}>
+            <Link href="/dashboard/tasks" style={{ fontSize: '0.85rem', color: 'var(--primary-color)', textDecoration: 'none' }}>
               View all →
             </Link>
           </div>
@@ -177,8 +177,8 @@ export default async function DashboardPage() {
               tasks.map(task => (
                 <div key={task.id} className={styles.activityItem}>
                   <div className={styles.activityAvatar} style={{
-                    background: task.status === 'DONE' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(99, 102, 241, 0.2)',
-                    color: task.status === 'DONE' ? '#6ee7b7' : '#a5b4fc'
+                    background: task.status === 'DONE' ? 'rgba(5, 150, 105, 0.15)' : 'rgba(2, 132, 199, 0.15)',
+                    color: task.status === 'DONE' ? 'var(--accent-emerald)' : 'var(--primary-color)'
                   }}>
                     {task.status === 'DONE' ? '✓' : '•'}
                   </div>

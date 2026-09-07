@@ -64,8 +64,8 @@ export default async function TasksPage() {
                       width: '24px',
                       height: '24px',
                       borderRadius: '50%',
-                      background: isDone ? 'rgba(16, 185, 129, 0.2)' : inProgress ? 'rgba(245, 158, 11, 0.2)' : 'rgba(99, 102, 241, 0.2)',
-                      color: isDone ? '#6ee7b7' : inProgress ? '#fde047' : '#a5b4fc',
+                      background: isDone ? 'rgba(5, 150, 105, 0.15)' : inProgress ? 'rgba(217, 119, 6, 0.15)' : 'rgba(2, 132, 199, 0.15)',
+                      color: isDone ? 'var(--accent-emerald)' : inProgress ? 'var(--accent-amber)' : 'var(--primary-color)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -94,7 +94,7 @@ export default async function TasksPage() {
 
                   <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', fontSize: '0.825rem', color: 'var(--text-muted)', paddingLeft: '2rem' }}>
                     <span>
-                      Project: <Link href={`/dashboard/projects/${task.project.id}`} style={{ color: '#a5b4fc', fontWeight: 600, textDecoration: 'none' }}>{task.project.name}</Link>
+                      Project: <Link href={`/dashboard/projects/${task.project.id}`} style={{ color: 'var(--primary-color)', fontWeight: 600, textDecoration: 'none' }}>{task.project.name}</Link>
                     </span>
                     {task.dueDate && (
                       <span>📅 Due: {new Date(task.dueDate).toLocaleDateString()}</span>

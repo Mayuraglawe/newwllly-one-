@@ -50,3 +50,39 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+    const params = await context.params;
+    const userId = (session.user as { id: string }).id;
+    const { searchParams } = new URL(request.url);
+    const memberUserId = searchParams.get('userId');
+
+    if (!memberUserId) {
+      return NextResponse.json({ message: 'Member userId is required' }, { status: 400 });
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: params.id }
+    });
+
+    if (!project || project.ownerId !== userId) {
+      return NextResponse.json({ message: 'Only the project owner can remove members' }, { status: 403 });
+    }
+
+    await prisma.projectMember.deleteMany({
+      where: {
+        projectId: params.id,
+        userId: memberUserId
+      }
+    });
+
+    return NextResponse.json({ message: 'Member removed successfully' });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+  }
+}

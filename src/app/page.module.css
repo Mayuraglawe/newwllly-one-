@@ -36,13 +36,13 @@
   gap: 0.5rem;
   padding: 0.4rem 1rem;
   border-radius: var(--radius-full);
-  background: rgba(99, 102, 241, 0.15);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  color: #a5b4fc;
+  background: rgba(2, 132, 199, 0.12);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  color: var(--primary-color);
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 2rem;
-  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 0 20px rgba(2, 132, 199, 0.15);
 }
 
 .title {
@@ -92,16 +92,16 @@
 
 .featureCard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 25px rgba(99, 102, 241, 0.2);
-  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: var(--shadow-lg), 0 0 25px rgba(2, 132, 199, 0.15);
+  border-color: var(--border-highlight);
 }
 
 .featureIcon {
   width: 52px;
   height: 52px;
   border-radius: var(--radius-lg);
-  background: rgba(99, 102, 241, 0.15);
-  color: #a5b4fc;
+  background: rgba(2, 132, 199, 0.12);
+  color: var(--primary-color);
   display: flex;
   align-items: center;
   justify-content: center;

@@ -35,9 +35,14 @@ export async function POST(request: Request) {
     const task = await prisma.task.create({
       data: {
         title,
-        description,
+        description: description || null,
         projectId,
         assigneeId: assigneeId || null
+      },
+      include: {
+        assignee: {
+          select: { id: true, name: true, email: true }
+        }
       }
     });
 

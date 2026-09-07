@@ -20,12 +20,12 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
   const project = await prisma.project.findUnique({
     where: { id: params.id },
     include: {
-      owner: { select: { name: true, email: true } },
+      owner: { select: { id: true, name: true, email: true } },
       members: {
-        include: { user: { select: { name: true, email: true } } }
+        include: { user: { select: { id: true, name: true, email: true } } }
       },
       tasks: {
-        include: { assignee: { select: { name: true } } },
+        include: { assignee: { select: { id: true, name: true, email: true } } },
         orderBy: { createdAt: 'desc' }
       }
     }
@@ -43,6 +43,12 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
     return <div style={{ padding: '2rem' }}>Unauthorized</div>;
   }
 
+  // Combine owner and members into a unified project members array for task assignments
+  const projectMembers = [
+    { id: project.owner.id, name: project.owner.name, email: project.owner.email, isOwner: true },
+    ...project.members.map(m => ({ id: m.user.id, name: m.user.name, email: m.user.email, isOwner: false }))
+  ];
+
   return (
     <div className={styles.dashboardContainer}>
       <header className={styles.pageHeader}>
@@ -56,17 +62,18 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
         </div>
       </header>
 
-      <TaskBoard initialTasks={project.tasks} projectId={project.id} />
+      <TaskBoard initialTasks={project.tasks} projectId={project.id} members={projectMembers} />
 
       <div style={{
         marginTop: '2rem',
-        background: 'rgba(17, 24, 39, 0.75)',
+        background: 'var(--surface-glass)',
         backdropFilter: 'blur(12px)',
         border: '1px solid var(--border-color)',
         borderRadius: 'var(--radius-lg)',
         padding: '1.5rem',
+        boxShadow: 'var(--shadow-md)'
       }}>
-        <h3 className={styles.cardTitle}>Team Members ({1 + project.members.length})</h3>
+        <h3 className={styles.cardTitle}>Team Members ({projectMembers.length})</h3>
         <ul style={{ listStyle: 'none', padding: 0 }}>
           <li style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>

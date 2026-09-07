@@ -114,7 +114,7 @@ export default async function TeamPage() {
                     ✉️ {member.email}
                   </p>
 
-                  <div style={{ fontSize: '0.8rem', color: '#a5b4fc', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--primary-color)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     📁 Projects: {member.projects.join(', ')}
                   </div>
                 </div>

@@ -9,12 +9,29 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     if (!session || !session.user) return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     
     const params = await context.params;
-    const { status } = await request.json();
-    if (!status) return NextResponse.json({ message: 'Status is required' }, { status: 400 });
+    const body = await request.json();
+    const { status, assigneeId, title, description, dueDate } = body;
+
+    const updateData: {
+      status?: string;
+      assigneeId?: string | null;
+      title?: string;
+      description?: string | null;
+      dueDate?: Date | null;
+    } = {};
+
+    if (status !== undefined) updateData.status = status;
+    if (assigneeId !== undefined) updateData.assigneeId = assigneeId === 'unassigned' || !assigneeId ? null : assigneeId;
+    if (title !== undefined) updateData.title = title;
+    if (description !== undefined) updateData.description = description;
+    if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
 
     const task = await prisma.task.update({
       where: { id: params.id },
-      data: { status }
+      data: updateData,
+      include: {
+        assignee: { select: { id: true, name: true, email: true } }
+      }
     });
 
     return NextResponse.json(task);
