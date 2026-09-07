@@ -23,11 +23,13 @@ type Task = {
 export default function TaskBoard({
   initialTasks,
   projectId,
-  members = []
+  members = [],
+  isAdminOrOwner = false
 }: {
   initialTasks: Task[];
   projectId: string;
   members?: Member[];
+  isAdminOrOwner?: boolean;
 }) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [newTaskTitle, setNewTaskTitle] = useState('');
@@ -145,21 +147,23 @@ export default function TaskBoard({
           }}>
             {task.title}
           </h4>
-          <button
-            onClick={() => handleDelete(task.id)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-muted)',
-              cursor: 'pointer',
-              fontSize: '1.25rem',
-              lineHeight: 1,
-              padding: '0 0.25rem',
-            }}
-            title="Delete Task"
-          >
-            ×
-          </button>
+          {isAdminOrOwner && (
+            <button
+              onClick={() => handleDelete(task.id)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+                fontSize: '1.25rem',
+                lineHeight: 1,
+                padding: '0 0.25rem',
+              }}
+              title="Delete Task"
+            >
+              ×
+            </button>
+          )}
         </div>
 
         {task.description && (
@@ -171,27 +175,39 @@ export default function TaskBoard({
         {/* Teammate Assignee Selector */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem', fontSize: '0.8rem' }}>
           <span style={{ color: 'var(--text-dim)', fontWeight: 600 }}>👤 Assignee:</span>
-          <select
-            value={currentAssigneeId}
-            onChange={(e) => handleAssigneeChange(task.id, e.target.value)}
-            style={{
+          {isAdminOrOwner ? (
+            <select
+              value={currentAssigneeId}
+              onChange={(e) => handleAssigneeChange(task.id, e.target.value)}
+              style={{
+                padding: '0.2rem 0.5rem',
+                borderRadius: 'var(--radius-sm)',
+                border: '1px solid var(--border-color)',
+                background: 'var(--surface-hover)',
+                color: 'var(--text-main)',
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                fontWeight: 500,
+              }}
+            >
+              <option value="unassigned">Unassigned</option>
+              {members.map(member => (
+                <option key={member.id} value={member.id}>
+                  {member.name || member.email} {member.isOwner ? '(Owner)' : ''}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <span style={{
               padding: '0.2rem 0.5rem',
               borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-color)',
               background: 'var(--surface-hover)',
               color: 'var(--text-main)',
-              fontSize: '0.8rem',
-              cursor: 'pointer',
               fontWeight: 500,
-            }}
-          >
-            <option value="unassigned">Unassigned</option>
-            {members.map(member => (
-              <option key={member.id} value={member.id}>
-                {member.name || member.email} {member.isOwner ? '(Owner)' : ''}
-              </option>
-            ))}
-          </select>
+            }}>
+              {task.assignee ? (task.assignee.name || task.assignee.email) : 'Unassigned'}
+            </span>
+          )}
         </div>
 
         <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
@@ -253,7 +269,8 @@ export default function TaskBoard({
 
   return (
     <div>
-      <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
+      {isAdminOrOwner && (
+        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'flex-end' }}>
         {isAdding ? (
           <form onSubmit={handleAddTask} style={{
             display: 'flex',
@@ -364,7 +381,8 @@ export default function TaskBoard({
             + Add & Assign Task
           </button>
         )}
-      </div>
+        </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         {/* To Do Column */}

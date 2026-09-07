@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
@@ -9,6 +10,11 @@ import styles from '../dashboard.module.css';
 import PlatformInviteModal from './PlatformInviteModal';
 
 export default function Sidebar() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    queueMicrotask(() => setMounted(true));
+  }, []);
+
   const pathname = usePathname();
   const { data: session } = useSession();
   const { theme, toggleTheme } = useTheme();
@@ -84,7 +90,7 @@ export default function Sidebar() {
           }}
           title="Toggle Light / Dark Mode"
         >
-          <span>{theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode'}</span>
+          <span>{mounted ? (theme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode') : '☀️ Light Mode'}</span>
           <span style={{
             fontSize: '0.75rem',
             padding: '0.15rem 0.5rem',

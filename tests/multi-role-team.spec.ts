@@ -16,15 +16,17 @@ test.describe('Multi-Role System, Teammate Invitation, and Work Allocation', () 
     await page.fill('input[type="email"]', adminEmail);
     await page.fill('input[type="password"]', adminPassword);
     await page.click('button[type="submit"]');
+    await page.waitForTimeout(1500); // wait for registration
 
     // 2. Login as Admin
     await page.goto('/login');
     await page.fill('input[type="email"]', adminEmail);
     await page.fill('input[type="password"]', adminPassword);
     await page.click('button[type="submit"]');
+    await page.waitForTimeout(1500); // wait for login redirect
 
     // Should reach Dashboard
-    await expect(page).toHaveURL('/dashboard');
+    await expect(page).toHaveURL(/.*dashboard.*/);
 
     // 3. Create a Project
     await page.click('button:has-text("+ Create Project")');

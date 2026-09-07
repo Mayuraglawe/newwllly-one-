@@ -72,8 +72,12 @@ export default async function DashboardPage() {
           </p>
         </div>
         <div className={styles.headerActions} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <AllocateTaskModal />
-          <CreateProjectModal />
+          {isAdmin && (
+            <>
+              <AllocateTaskModal />
+              <CreateProjectModal />
+            </>
+          )}
         </div>
       </header>
 

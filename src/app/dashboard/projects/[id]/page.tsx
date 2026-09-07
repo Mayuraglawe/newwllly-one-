@@ -66,7 +66,7 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
         </div>
       </header>
 
-      <TaskBoard initialTasks={project.tasks} projectId={project.id} members={projectMembers} />
+      <TaskBoard initialTasks={project.tasks} projectId={project.id} members={projectMembers} isAdminOrOwner={isOwner} />
 
       <div style={{
         marginTop: '2rem',
