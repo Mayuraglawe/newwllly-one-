@@ -7,7 +7,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useTheme } from '@/components/ThemeContext';
 import styles from '../dashboard.module.css';
 
-import PlatformInviteModal from './PlatformInviteModal';
+
 
 export default function Sidebar() {
   const [mounted, setMounted] = useState(false);
@@ -26,12 +26,13 @@ export default function Sidebar() {
     { label: 'Team', href: '/dashboard/team', icon: '👥' },
   ];
 
-  const userName = session?.user?.name || 'User';
   const userEmail = session?.user?.email || '';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userRole = (session?.user as any)?.role || 'MEMBER';
   const isAdmin = userRole === 'ADMIN';
-  const initial = (userName || 'U')[0].toUpperCase();
+  // Use name, or fall back to the part before @ in email, or 'User'
+  const userName = session?.user?.name || userEmail.split('@')[0] || 'User';
+  const initial = (userName)[0].toUpperCase();
 
   return (
     <aside className={styles.sidebar}>
@@ -68,14 +69,7 @@ export default function Sidebar() {
           })}
         </nav>
       </div>
-
       <div className={styles.sidebarFooter}>
-        {/* Admin Invite Teammate Shortcut */}
-        {isAdmin && (
-          <div style={{ marginBottom: '0.25rem' }}>
-            <PlatformInviteModal />
-          </div>
-        )}
 
         {/* Theme Toggle Button */}
         <button

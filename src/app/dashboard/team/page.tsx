@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import styles from '../dashboard.module.css';
 import PlatformInviteModal from '../components/PlatformInviteModal';
-import AllocateTaskModal from '../components/AllocateTaskModal';
+
 
 export default async function TeamPage() {
   const session = await getServerSession(authOptions);
@@ -15,8 +15,7 @@ export default async function TeamPage() {
   const isAdmin = userRole === 'ADMIN';
 
   // Fetch all users on the platform to show workspace directory
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const platformUsers: any[] = await (prisma.user as any).findMany({
+  const platformUsers = await prisma.user.findMany({
     include: {
       memberships: {
         include: { project: { select: { name: true } } }
@@ -35,9 +34,8 @@ export default async function TeamPage() {
           <h1 className={styles.pageTitle}>Team Directory</h1>
           <p className={styles.pageSubtitle}>All workspace collaborators ({platformUsers.length})</p>
         </div>
-        {(isAdmin || platformUsers.length > 0) && (
+        {isAdmin && (
           <div className={styles.headerActions} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-            <AllocateTaskModal />
             <PlatformInviteModal />
           </div>
         )}
@@ -51,7 +49,8 @@ export default async function TeamPage() {
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.5rem' }}>
-          {platformUsers.map((user) => {
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          {(platformUsers as any[]).map((user) => {
             const initial = (user.name || user.email)[0].toUpperCase();
             const isAdminRole = user.role === 'ADMIN';
             

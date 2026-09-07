@@ -4,12 +4,16 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import styles from '../dashboard.module.css';
+import AllocateTaskModal from '../components/AllocateTaskModal';
 
 export default async function TasksPage() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.email) redirect('/login');
 
   const userId = (session.user as { id: string }).id;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userRole = (session.user as any).role || 'MEMBER';
+  const isAdmin = userRole === 'ADMIN';
 
   // Get all tasks assigned to the current user
   const tasks = await prisma.task.findMany({
@@ -27,6 +31,11 @@ export default async function TasksPage() {
           <h1 className={styles.pageTitle}>My Tasks</h1>
           <p className={styles.pageSubtitle}>All action items assigned to you across projects ({tasks.length})</p>
         </div>
+        {isAdmin && (
+          <div className={styles.headerActions}>
+            <AllocateTaskModal />
+          </div>
+        )}
       </header>
 
       {tasks.length === 0 ? (

@@ -56,10 +56,26 @@ export const authOptions: AuthOptions = {
       return session;
     },
     async jwt({ token, user }: { token: JWT; user: User | undefined }) {
+      // On first login, get role from the user object returned by authorize()
       if (user) {
         token.id = user.id;
         token.role = (user as unknown as { role?: string }).role || "MEMBER";
       }
+      
+      // Always re-fetch the latest role from DB to reflect any admin changes
+      if (token.id) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+          }) as unknown as { role: string } | null;
+          if (dbUser) {
+            token.role = dbUser.role || "MEMBER";
+          }
+        } catch {
+          // keep existing token.role on DB error
+        }
+      }
+
       return token;
     }
   }
