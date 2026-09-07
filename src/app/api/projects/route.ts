@@ -12,9 +12,11 @@ export async function GET() {
     }
 
     const userId = (session.user as { id: string }).id;
+    const userRole = (session.user as { role?: string }).role || 'MEMBER';
+    const isAdmin = userRole === 'ADMIN';
 
     const projects = await prisma.project.findMany({
-      where: {
+      where: isAdmin ? {} : {
         OR: [
           { ownerId: userId },
           { members: { some: { userId: userId } } }

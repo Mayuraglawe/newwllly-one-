@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import styles from './dashboard.module.css';
 import CreateProjectModal from './components/CreateProjectModal';
+import AllocateTaskModal from './components/AllocateTaskModal';
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -70,7 +71,8 @@ export default async function DashboardPage() {
             </span>
           </p>
         </div>
-        <div className={styles.headerActions}>
+        <div className={styles.headerActions} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <AllocateTaskModal />
           <CreateProjectModal />
         </div>
       </header>

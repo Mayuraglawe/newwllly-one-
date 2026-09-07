@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import styles from '../dashboard.module.css';
 import PlatformInviteModal from '../components/PlatformInviteModal';
+import AllocateTaskModal from '../components/AllocateTaskModal';
 
 export default async function TeamPage() {
   const session = await getServerSession(authOptions);
@@ -35,7 +36,8 @@ export default async function TeamPage() {
           <p className={styles.pageSubtitle}>All workspace collaborators ({platformUsers.length})</p>
         </div>
         {(isAdmin || platformUsers.length > 0) && (
-          <div className={styles.headerActions} style={{ maxWidth: '240px' }}>
+          <div className={styles.headerActions} style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            <AllocateTaskModal />
             <PlatformInviteModal />
           </div>
         )}
